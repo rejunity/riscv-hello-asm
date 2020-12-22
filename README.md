@@ -2,7 +2,7 @@
 
 This is a bare metal 64-bit RISC-V assembly program outputing `Hello.`. It is
 compiled with the riscv-gnu-toolchain and can be run with the QEMU `sifive_u`
-machine.
+and `sifive_e` machines.
 
 I searched for such a program on the Internet but the only examples I found
 were either bare metal C, or assembly but relying on an OS. Eventually I took
@@ -25,15 +25,15 @@ issue](https://github.com/noteed/riscv-hello-asm/issues/1).
 
 ## Building
 
-Assuming the toolchain is in the `$PATH`, running the following produce our
-`hello` program.
+Assuming the toolchain is in the `$PATH`, running the following will produce
+our `hello` program.
 
 ```
 $ riscv64-unknown-elf-gcc -march=rv64g -mabi=lp64 -static -mcmodel=medany \
   -fvisibility=hidden -nostdlib -nostartfiles -Thello.ld hello.s -o hello
 ```
 
-The result is a 64-bit RISC-V binary.
+The result is a 64-bit RISC-V binary compatible with QEMU `sifive_u` machine.
 
 ```
 $ file hello
@@ -47,6 +47,37 @@ Run it with:
 
 ```
 $ qemu-system-riscv64 -nographic -machine sifive_u -bios none -kernel hello
+Hello.
+QEMU: Terminated
+```
+
+Note: the program enters an infinite loop after producing the `Hello.` text.
+Type `ctrl-a x` to stop QEMU.
+
+
+## sifive_e machine
+
+Our code can be configured to run on a more resticted machines like `sifive_e`.
+
+`sifive_e` has different serial communication address than `sifive_u`,
+its executable code has to be placed in ROM and the start address is
+different too. We will specify these machine dependent symbols via
+toolchain arguments.
+
+-Assuming the toolchain is in the `$PATH`, running the following produce our
+`hello` program, but now ready for `sifive_e`.
+
+```
+$ riscv64-unknown-elf-gcc -march=rv64g -mabi=lp64 -static -mcmodel=medany \
+  -fvisibility=hidden -nostdlib -nostartfiles -Thello.ld hello.s \
+  -Wa,--defsym,UART=0x10013000 -Wl,--defsym,ROM_START=0x20400000 \
+  -o hello
+```
+
+Run it with:
+
+```
+$ qemu-system-riscv64 -nographic -machine sifive_e -bios none -kernel hello
 Hello.
 QEMU: Terminated
 ```
