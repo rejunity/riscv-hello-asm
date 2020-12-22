@@ -1,5 +1,9 @@
 .align 2
-.equ UART_BASE,         0x10010000
+.ifdef UART
+.equ UART_BASE,         UART          # use "-Wa,--defsym,UART=0x10013000" GCC command line argument to specify machine specific UART address
+.else
+.equ UART_BASE,         0x10010000    # otherwise defaults to UART0 of `sifive_u` machine
+.endif
 .equ UART_REG_TXFIFO,   0
 
 .section .text
