@@ -64,7 +64,7 @@ its executable code has to be placed in ROM and the start address is
 different too. We will specify these machine dependent symbols via
 toolchain arguments.
 
--Assuming the toolchain is in the `$PATH`, running the following produce our
+Assuming the toolchain is in the `$PATH`, running the following produces our
 `hello` program, but now ready for `sifive_e`.
 
 ```
