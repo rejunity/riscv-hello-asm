@@ -1,5 +1,5 @@
 OUTPUT_ARCH( "riscv" )
-OUTPUT_FORMAT("elf64-littleriscv")
+OUTPUT_FORMAT("elf32-littleriscv")
 ENTRY( _start )
 SECTIONS
 {
