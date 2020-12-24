@@ -1,5 +1,5 @@
 .align 2
-.equ UART_BASE,         0x10010000
+#    UART_BASE is defined in machine specific .inc file (for example: sifive_u.inc)
 .equ UART_REG_TXFIFO,   0
 
 .section .text
